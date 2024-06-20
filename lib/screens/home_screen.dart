@@ -1,83 +1,100 @@
-import 'package:djikarice_delivery/screens/delivery_screen.dart';
-import 'package:djikarice_delivery/screens/moving_screen.dart';
-import 'package:djikarice_delivery/screens/shipping_screen.dart';
-import 'package:djikarice_delivery/screens/transport_screen.dart';
+import 'package:djikarice_delivery/screens/add_order_screen.dart';
 import 'package:flutter/material.dart';
+import '../helpers/database_helper.dart';
+import '../models/order_model.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  void _navigateToService(BuildContext context, String serviceName) {
-    Widget serviceScreen;
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
 
-    switch (serviceName) {
-      case 'Course et livraison à domicile':
-        serviceScreen = DeliveryScreen();
-        break;
-      case 'Déménagement et transport de marchandises':
-        serviceScreen = MovingScreen(); // Créez ce widget
-        break;
-      case 'Service expédition colis':
-        serviceScreen = ShippingScreen(); // Créez ce widget
-        break;
-      case 'Transport de personnes':
-        serviceScreen = TransportScreen(); // Créez ce widget
-        break;
-      default:
-        serviceScreen = HomeScreen();
+class _HomeScreenState extends State<HomeScreen> {
+  List<Order> orders = [];
+  String filter = 'Tous';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOrders();
+  }
+
+  Future<void> _loadOrders() async {
+    final data = await DatabaseHelper.instance.readAllOrders();
+    setState(() {
+      orders = data;
+    });
+  }
+
+  void _applyFilter(String selectedFilter) {
+    setState(() {
+      filter = selectedFilter;
+    });
+  }
+
+  List<Order> get filteredOrders {
+    if (filter == 'Tous') {
+      return orders;
+    } else if (filter == 'Par Distance') {
+      return orders..sort((a, b) => a.distance.compareTo(b.distance));
+    } else {
+      return orders.where((order) => order.status == filter).toList();
     }
+  }
 
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => serviceScreen),
+  void _navigateToAddOrder() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddOrderScreen()),
     );
+    if (result == true) {
+      _loadOrders();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DJIKARICE DELIVERY'),
+        title: const Text('Commandes et Livraisons'),
         backgroundColor: const Color(0xFF00695C),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: _applyFilter,
+            itemBuilder: (BuildContext context) {
+              return ['Tous', 'En cours', 'Terminé', 'Par Distance'].map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16.0,
-          mainAxisSpacing: 16.0,
-          children: [
-            _buildServiceCard(context, 'Course et livraison à domicile',
-                Icons.local_shipping),
-            _buildServiceCard(
-                context,
-                'Déménagement et transport de marchandises',
-                Icons.move_to_inbox),
-            _buildServiceCard(context, 'Service expédition colis', Icons.send),
-            _buildServiceCard(
-                context, 'Transport de personnes', Icons.directions_car),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildServiceCard(BuildContext context, String title, IconData icon) {
-    return GestureDetector(
-      onTap: () => _navigateToService(context, title),
-      child: Card(
-        color: const Color(0xFF00695C),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 50, color: Colors.white),
-            const SizedBox(height: 10),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
+      body: ListView.builder(
+        itemCount: filteredOrders.length,
+        itemBuilder: (context, index) {
+          final order = filteredOrders[index];
+          return ListTile(
+            title: Text(order.type),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Status: ${order.status}'),
+                Text('Départ: ${order.startLocation}'),
+                Text('Distance: ${order.distance} km'),
+                Text('Description: ${order.description}'),
+              ],
             ),
-          ],
-        ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _navigateToAddOrder,
+        child: const Icon(Icons.add),
+        backgroundColor: const Color(0xFF00695C),
       ),
     );
   }
