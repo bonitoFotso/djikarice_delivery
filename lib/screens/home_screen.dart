@@ -1,12 +1,34 @@
+import 'package:djikarice_delivery/screens/delivery_screen.dart';
+import 'package:djikarice_delivery/screens/moving_screen.dart';
+import 'package:djikarice_delivery/screens/shipping_screen.dart';
+import 'package:djikarice_delivery/screens/transport_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   void _navigateToService(BuildContext context, String serviceName) {
-    // Remplacez cette fonction avec une navigation vers les écrans de services spécifiques
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Navigating to $serviceName')),
+    Widget serviceScreen;
+
+    switch (serviceName) {
+      case 'Course et livraison à domicile':
+        serviceScreen = DeliveryScreen();
+        break;
+      case 'Déménagement et transport de marchandises':
+        serviceScreen = MovingScreen(); // Créez ce widget
+        break;
+      case 'Service expédition colis':
+        serviceScreen = ShippingScreen(); // Créez ce widget
+        break;
+      case 'Transport de personnes':
+        serviceScreen = TransportScreen(); // Créez ce widget
+        break;
+      default:
+        serviceScreen = HomeScreen();
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => serviceScreen),
     );
   }
 
@@ -24,10 +46,15 @@ class HomeScreen extends StatelessWidget {
           crossAxisSpacing: 16.0,
           mainAxisSpacing: 16.0,
           children: [
-            _buildServiceCard(context, 'Course et livraison à domicile', Icons.local_shipping),
-            _buildServiceCard(context, 'Déménagement et transport de marchandises', Icons.move_to_inbox),
+            _buildServiceCard(context, 'Course et livraison à domicile',
+                Icons.local_shipping),
+            _buildServiceCard(
+                context,
+                'Déménagement et transport de marchandises',
+                Icons.move_to_inbox),
             _buildServiceCard(context, 'Service expédition colis', Icons.send),
-            _buildServiceCard(context, 'Transport de personnes', Icons.directions_car),
+            _buildServiceCard(
+                context, 'Transport de personnes', Icons.directions_car),
           ],
         ),
       ),
