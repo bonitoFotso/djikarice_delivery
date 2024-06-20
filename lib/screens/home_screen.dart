@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   void _navigateToService(BuildContext context, String serviceName) {
     // Remplacez cette fonction avec une navigation vers les écrans de services spécifiques
     ScaffoldMessenger.of(context).showSnackBar(
@@ -12,8 +14,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('DJIKARICE DELIVERY'),
-        backgroundColor: Color(0xFF00695C),
+        title: const Text('DJIKARICE DELIVERY'),
+        backgroundColor: const Color(0xFF00695C),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -36,16 +38,16 @@ class HomeScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => _navigateToService(context, title),
       child: Card(
-        color: Color(0xFF00695C),
+        color: const Color(0xFF00695C),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 50, color: Colors.white),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 16),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
           ],
         ),
