@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "942426820223",
+    "project_id": "djikarice",
+    "storage_bucket": "djikarice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:942426820223:android:245cbb7bc6d340ec29b94a",
+        "android_client_info": {
+          "package_name": "com.djikarice_delivery.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4bhSmqXeYLBFO-Ev5idE0kkgP_WQIA_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

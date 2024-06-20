@@ -1,5 +1,5 @@
+import 'package:djikarice_delivery/screens/auth_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:djikarice_delivery/screens/home.dart'; // Remplacez par votre widget d'écran d'accueil
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -14,10 +14,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _navigateToHome() async {
-    await Future.delayed(const Duration(milliseconds: 3000), () {});
+    await Future.delayed(const Duration(milliseconds: 4000), () {});
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const MyHomePage(title: 'home',)),
+      MaterialPageRoute(builder: (context) =>  AuthScreen()),
     );
   }
 
