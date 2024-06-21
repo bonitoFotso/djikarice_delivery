@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DeliveryScreen extends StatelessWidget {
+  const DeliveryScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,12 +59,12 @@ class DeliveryScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Nos Services de Livraison à Domicile',
               style: TextStyle(
                 fontSize: 24,
@@ -70,13 +72,13 @@ class DeliveryScreen extends StatelessWidget {
                 color: Color(0xFF00695C),
               ),
             ),
-            const SizedBox(height: 16),
-            const Text(
+            SizedBox(height: 16),
+            Text(
               'Nous offrons des services de course et de livraison à domicile pour faciliter votre quotidien. Nos agents se chargent de faire vos courses et de vous les livrer chez vous.',
               style: TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 16),
-            const Expanded(
+            SizedBox(height: 16),
+            Expanded(
               child: Center(
                 child: Text(
                   'Sélectionnez un service dans le menu déroulant.',

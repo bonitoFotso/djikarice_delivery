@@ -1,75 +1,60 @@
-import 'package:sqflite/sqflite.dart';
+import 'dart:async';
 import 'package:path/path.dart';
-import '../models/order_model.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper instance = DatabaseHelper._init();
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
+
+  factory DatabaseHelper() => _instance;
+
+  DatabaseHelper._internal();
 
   static Database? _database;
 
-  DatabaseHelper._init();
-
   Future<Database> get database async {
     if (_database != null) return _database!;
-
-    _database = await _initDB('orders.db');
+    _database = await _initDatabase();
     return _database!;
   }
 
-  Future<Database> _initDB(String filePath) async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, filePath);
-
+  Future<Database> _initDatabase() async {
+    String path = join(await getDatabasesPath(), 'auth.db');
     return await openDatabase(
       path,
       version: 1,
-      onCreate: _createDB,
+      onCreate: _onCreate,
     );
   }
 
-  Future _createDB(Database db, int version) async {
+  Future _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE orders (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        type TEXT,
-        status TEXT,
-        startLocation TEXT,
-        distance REAL,
-        description TEXT
+      CREATE TABLE auth (
+        id INTEGER PRIMARY KEY,
+        token TEXT
       )
     ''');
   }
 
-  Future<int> create(Order order) async {
-    final db = await instance.database;
-    return await db.insert('orders', order.toMap());
-  }
-
-  Future<List<Order>> readAllOrders() async {
-    final db = await instance.database;
-    final result = await db.query('orders');
-
-    return result.map((json) => Order.fromMap(json)).toList();
-  }
-
-  Future<int> update(Order order) async {
-    final db = await instance.database;
-
-    return db.update(
-      'orders',
-      order.toMap(),
-      where: 'id = ?',
-      whereArgs: [order.id],
+  Future<void> saveToken(String token) async {
+    final db = await database;
+    await db.insert(
+      'auth',
+      {'token': token},
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  Future<int> delete(int id) async {
-    final db = await instance.database;
+  Future<String?> getToken() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('auth');
+    if (maps.isNotEmpty) {
+      return maps.first['token'];
+    }
+    return null;
+  }
 
-    return await db.delete(
-      'orders',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+  Future<void> deleteToken() async {
+    final db = await database;
+    await db.delete('auth');
   }
 }

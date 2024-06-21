@@ -10,6 +10,8 @@ class AddOrderScreen extends StatelessWidget {
   final TextEditingController _distanceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
+  AddOrderScreen({super.key});
+
   void _addOrder(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final order = Order(
@@ -91,10 +93,10 @@ class AddOrderScreen extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => _addOrder(context),
-                child: const Text('Ajouter'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF00695C),
                 ),
+                child: const Text('Ajouter'),
               ),
             ],
           ),

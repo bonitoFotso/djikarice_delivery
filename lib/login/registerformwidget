@@ -1,0 +1,141 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:djikarice_delivery/provider/auth_provider.dart';
+import 'package:djikarice_delivery/screens/home_screen.dart';
+
+
+class RegisterFormWidget extends StatefulWidget {
+  final Function() onToggleFormMode;
+
+  const RegisterFormWidget({
+    super.key,
+    required this.onToggleFormMode,
+  });
+
+  @override
+  _RegisterFormWidgetState createState() => _RegisterFormWidgetState();
+}
+
+class _RegisterFormWidgetState extends State<RegisterFormWidget> {
+  final _formKey = GlobalKey<FormState>();
+  String email = '';
+  String password = '';
+  String name = '';
+  String phoneNumber = '';
+  String role = 'client'; // default role
+  String errorMessage = '';
+
+  void _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+      try {
+        await authProvider.register(email, password, name, phoneNumber, role);
+        if (authProvider.isAuthenticated) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(),
+            ),
+          );
+        }
+      } catch (e) {
+        setState(() {
+          errorMessage = e.toString();
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Inscription'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: <Widget>[
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Nom'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Veuillez entrer votre nom';
+                  }
+                  return null;
+                },
+                onSaved: (value) => name = value!,
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Email'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Veuillez entrer votre email';
+                  }
+                  return null;
+                },
+                onSaved: (value) => email = value!,
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Mot de passe'),
+                obscureText: true,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Veuillez entrer votre mot de passe';
+                  }
+                  return null;
+                },
+                onSaved: (value) => password = value!,
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Numéro de téléphone'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Veuillez entrer votre numéro de téléphone';
+                  }
+                  return null;
+                },
+                onSaved: (value) => phoneNumber = value!,
+              ),
+              DropdownButtonFormField<String>(
+                value: role,
+                decoration: InputDecoration(labelText: 'Rôle'),
+                items: [
+                  DropdownMenuItem(value: 'client', child: Text('Client')),
+                  DropdownMenuItem(value: 'livreur', child: Text('Livreur')),
+                  DropdownMenuItem(value: 'responsable', child: Text('Responsable')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    role = value!;
+                  });
+                },
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _submitForm,
+                child: Text('Inscription'),
+              ),
+              TextButton(
+                onPressed: widget.onToggleFormMode,
+                child: Text('Vous avez déjà un compte ? Connectez-vous'),
+              ),
+              if (errorMessage.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Text(
+                    errorMessage,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -1,100 +1,139 @@
-import 'package:djikarice_delivery/screens/add_order_screen.dart';
+import 'package:djikarice_delivery/login/login_screen.dart';
+import 'package:djikarice_delivery/models/user.dart';
+import 'package:djikarice_delivery/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
-import '../helpers/database_helper.dart';
-import '../models/order_model.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  List<Order> orders = [];
-  String filter = 'Tous';
-
-  @override
-  void initState() {
-    super.initState();
-    _loadOrders();
-  }
-
-  Future<void> _loadOrders() async {
-    final data = await DatabaseHelper.instance.readAllOrders();
-    setState(() {
-      orders = data;
-    });
-  }
-
-  void _applyFilter(String selectedFilter) {
-    setState(() {
-      filter = selectedFilter;
-    });
-  }
-
-  List<Order> get filteredOrders {
-    if (filter == 'Tous') {
-      return orders;
-    } else if (filter == 'Par Distance') {
-      return orders..sort((a, b) => a.distance.compareTo(b.distance));
-    } else {
-      return orders.where((order) => order.status == filter).toList();
-    }
-  }
-
-  void _navigateToAddOrder() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AddOrderScreen()),
-    );
-    if (result == true) {
-      _loadOrders();
-    }
-  }
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    // Charger les informations de l'utilisateur lorsque l'écran est construit
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      authProvider.loadUserInformation().catchError((error) {
+        // Gérer les erreurs ici, par exemple afficher une boîte de dialogue d'erreur
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Erreur'),
+            content: Text('$error'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      });
+    });
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Commandes et Livraisons'),
-        backgroundColor: const Color(0xFF00695C),
+        title: const Text('Accueil'),
         actions: [
-          PopupMenuButton<String>(
-            onSelected: _applyFilter,
-            itemBuilder: (BuildContext context) {
-              return ['Tous', 'En cours', 'Terminé', 'Par Distance'].map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              authProvider.logout();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const AuthWidget()),
+              );
             },
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: filteredOrders.length,
-        itemBuilder: (context, index) {
-          final order = filteredOrders[index];
-          return ListTile(
-            title: Text(order.type),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Status: ${order.status}'),
-                Text('Départ: ${order.startLocation}'),
-                Text('Distance: ${order.distance} km'),
-                Text('Description: ${order.description}'),
-              ],
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Menu',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Bienvenue ${authProvider.user?.name ?? ''}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
             ),
-          );
-        },
+            ListTile(
+              title: const Text('Profil'),
+              leading: const Icon(Icons.account_circle),
+              onTap: () {
+                // Naviguer vers l'écran de profil
+              },
+            ),
+            ListTile(
+              title: const Text('Commandes'),
+              leading: const Icon(Icons.shopping_cart),
+              onTap: () {
+                // Naviguer vers l'écran des commandes
+              },
+            ),
+            ListTile(
+              title: const Text('Paramètres'),
+              leading: const Icon(Icons.settings),
+              onTap: () {
+                // Naviguer vers l'écran de paramètres
+              },
+            ),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _navigateToAddOrder,
-        child: const Icon(Icons.add),
-        backgroundColor: const Color(0xFF00695C),
+      body: Center(
+        child: authProvider.isAuthenticated
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Bienvenue ${authProvider.user?.name ?? ''}',
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                  const SizedBox(height: 20),
+                  if (authProvider.user is Client)
+                    const Text('Vous êtes un client'),
+                  if (authProvider.user is Livreur)
+                    const Text('Vous êtes un livreur'),
+                  if (authProvider.user is Responsable)
+                    const Text('Vous êtes un responsable'),
+                ],
+              )
+            : const CircularProgressIndicator(),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0, // Indice de l'élément sélectionné
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Accueil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Commandes',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
+          ),
+        ],
+        onTap: (index) {
+          // Gérer la navigation en fonction de l'indice sélectionné
+        },
       ),
     );
   }

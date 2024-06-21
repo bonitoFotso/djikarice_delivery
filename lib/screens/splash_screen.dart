@@ -1,7 +1,8 @@
-import 'package:djikarice_delivery/screens/auth_screen.dart';
-import 'package:djikarice_delivery/screens/home_screen.dart';
+import 'package:djikarice_delivery/login/login_screen.dart';
+import 'package:djikarice_delivery/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'home_screen.dart'; // Remplacez par votre fichier HomeScreen
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,22 +19,26 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _navigateToNext() async {
-    await Future.delayed(const Duration(milliseconds: 4000), () {});
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      // Si l'utilisateur est connecté, allez à l'écran de profil
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
-    } else {
-      // Si l'utilisateur n'est pas connecté, allez à l'écran d'authentification
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => AuthScreen()),
-      );
-    }
+    await Future.delayed(const Duration(milliseconds: 4000), () {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      if (authProvider.isAuthenticated) {
+        // Si l'utilisateur est connecté, allez à l'écran de profil
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  const HomeScreen()), // Remplacez par le widget de votre page d'accueil
+        );
+      } else {
+        // Si l'utilisateur n'est pas connecté, allez à l'écran d'authentification
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  const AuthWidget()), // Remplacez par le widget de votre page d'authentification
+        );
+      }
+    });
   }
 
   @override

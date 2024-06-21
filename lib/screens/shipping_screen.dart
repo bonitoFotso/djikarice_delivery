@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
 class ShippingScreen extends StatelessWidget {
+  const ShippingScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Service Expédition Colis'),
-        backgroundColor: Color(0xFF00695C),
+        title: const Text('Service Expédition Colis'),
+        backgroundColor: const Color(0xFF00695C),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Nos Services d\'Expédition',
               style: TextStyle(
                 fontSize: 24,
@@ -21,12 +23,12 @@ class ShippingScreen extends StatelessWidget {
                 color: Color(0xFF00695C),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Nous offrons des services d\'expédition de colis rapides et fiables pour répondre à tous vos besoins d\'envoi, que ce soit au niveau national ou international.',
               style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: ListView(
                 children: [
@@ -56,12 +58,12 @@ class ShippingScreen extends StatelessWidget {
 
   Widget _buildServiceItem({required IconData icon, required String title, required String description}) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
-        leading: Icon(icon, size: 40, color: Color(0xFF00695C)),
+        leading: Icon(icon, size: 40, color: const Color(0xFF00695C)),
         title: Text(
           title,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(description),
       ),
