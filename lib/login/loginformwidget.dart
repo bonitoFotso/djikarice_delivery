@@ -1,5 +1,5 @@
 import 'package:djikarice_delivery/provider/auth_provider.dart';
-import 'package:djikarice_delivery/screens/home_screen.dart';
+import 'package:djikarice_delivery/screens/hscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +34,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomeScreen(),
+              builder: (context) => const HomeScreen(),
             ),
           );
         }
@@ -50,47 +50,78 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        children: [
-          TextFormField(
-            decoration: const InputDecoration(labelText: 'Email'),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Veuillez entrer votre email';
-              }
-              return null;
-            },
-            onSaved: (value) => email = value!,
-          ),
-          TextFormField(
-            decoration: const InputDecoration(labelText: 'Mot de passe'),
-            obscureText: true,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Veuillez entrer votre mot de passe';
-              }
-              return null;
-            },
-            onSaved: (value) => password = value!,
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _submitForm,
-            child: const Text('Connexion'),
-          ),
-          TextButton(
-            onPressed: widget.onToggleFormMode,
-            child: const Text('Créer un compte'),
-          ),
-          if (errorMessage.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Text(
-                errorMessage,
-                style: const TextStyle(color: Colors.red),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 20),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                labelStyle: TextStyle(color: Color(0xFF00695C)),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF00695C)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF00695C)),
+                ),
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Veuillez entrer votre email';
+                }
+                return null;
+              },
+              onSaved: (value) => email = value!,
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Mot de passe',
+                labelStyle: TextStyle(color: Color(0xFF00695C)),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF00695C)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF00695C)),
+                ),
+              ),
+              obscureText: true,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Veuillez entrer votre mot de passe';
+                }
+                return null;
+              },
+              onSaved: (value) => password = value!,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: const Color(0xFF00695C),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+              ),
+              onPressed: _submitForm,
+              child: const Text('Connexion'),
+            ),
+            TextButton(
+              onPressed: widget.onToggleFormMode,
+              child: const Text(
+                'Créer un compte',
+                style: TextStyle(color: Color(0xFF00695C)),
               ),
             ),
-        ],
+            if (errorMessage.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(
+                  errorMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

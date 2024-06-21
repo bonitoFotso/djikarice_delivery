@@ -1,0 +1,60 @@
+[
+    {
+      "id": 1,
+      "user": {
+        "id": 1,
+        "email": "client1@example.com",
+        "name": "Client 1",
+        "isActive": true,
+        "isAdmin": false,
+        "createdAt": "2024-06-21T15:22:23.688629Z",
+        "updatedAt": "2024-06-21T15:22:23.688673Z"
+      },
+      "livreur": null,
+      "status": "pending",
+      "packageType": "medium",
+      "pickupAddress": "123 Main St, City",
+      "deliveryAddress": "456 Elm St, Town",
+      "scheduledTime": "2024-06-22T10:00:00Z",
+      "actualDeliveryTime": null,
+      "notes": null,
+      "packageDetails": null,
+      "createdAt": "2024-06-21T15:22:23.688629Z",
+      "updatedAt": "2024-06-21T15:22:23.688673Z"
+    },
+    {
+      "id": 2,
+      "user": {
+        "id": 2,
+        "email": "client2@example.com",
+        "name": "Client 2",
+        "isActive": true,
+        "isAdmin": false,
+        "createdAt": "2024-06-21T15:22:23.688629Z",
+        "updatedAt": "2024-06-21T15:22:23.688673Z"
+      },
+      "livreur": {
+        "id": 1,
+        "email": "livreur1@example.com",
+        "name": "Livreur 1",
+        "isActive": true,
+        "isAdmin": false,
+        "createdAt": "2024-06-21T15:22:23.688629Z",
+        "updatedAt": "2024-06-21T15:22:23.688673Z"
+      },
+      "status": "in_transit",
+      "packageType": "large",
+      "pickupAddress": "789 Center St, Village",
+      "deliveryAddress": "101 Park Ave, Suburb",
+      "scheduledTime": "2024-06-23T15:00:00Z",
+      "actualDeliveryTime": null,
+      "notes": "Handle with care",
+      "packageDetails": {
+        "dimensions": "50x50x50 cm",
+        "weight": "10 kg"
+      },
+      "createdAt": "2024-06-21T15:22:23.688629Z",
+      "updatedAt": "2024-06-21T15:22:23.688673Z"
+    }
+  ]
+  

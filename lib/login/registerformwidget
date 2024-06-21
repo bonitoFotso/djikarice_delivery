@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:djikarice_delivery/provider/auth_provider.dart';
 import 'package:djikarice_delivery/screens/home_screen.dart';
 
-
 class RegisterFormWidget extends StatefulWidget {
   final Function() onToggleFormMode;
 
@@ -50,18 +49,22 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Inscription'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
+    return Form(
           key: _formKey,
           child: ListView(
             children: <Widget>[
+              const SizedBox(height: 20),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Nom'),
+                decoration: InputDecoration(
+                  labelText: 'Nom',
+                  labelStyle: TextStyle(color: Color(0xFF00695C)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00695C)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00695C)),
+                  ),
+                ),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Veuillez entrer votre nom';
@@ -70,8 +73,18 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                 },
                 onSaved: (value) => name = value!,
               ),
+              const SizedBox(height: 20),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: TextStyle(color: Color(0xFF00695C)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00695C)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00695C)),
+                  ),
+                ),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Veuillez entrer votre email';
@@ -80,8 +93,18 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                 },
                 onSaved: (value) => email = value!,
               ),
+              const SizedBox(height: 20),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Mot de passe'),
+                decoration: InputDecoration(
+                  labelText: 'Mot de passe',
+                  labelStyle: TextStyle(color: Color(0xFF00695C)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00695C)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00695C)),
+                  ),
+                ),
                 obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -91,8 +114,18 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                 },
                 onSaved: (value) => password = value!,
               ),
+              const SizedBox(height: 20),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Numéro de téléphone'),
+                decoration: InputDecoration(
+                  labelText: 'Numéro de téléphone',
+                  labelStyle: TextStyle(color: Color(0xFF00695C)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00695C)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00695C)),
+                  ),
+                ),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Veuillez entrer votre numéro de téléphone';
@@ -101,10 +134,20 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                 },
                 onSaved: (value) => phoneNumber = value!,
               ),
+              const SizedBox(height: 20),
               DropdownButtonFormField<String>(
                 value: role,
-                decoration: InputDecoration(labelText: 'Rôle'),
-                items: [
+                decoration: InputDecoration(
+                  labelText: 'Rôle',
+                  labelStyle: TextStyle(color: Color(0xFF00695C)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00695C)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00695C)),
+                  ),
+                ),
+                items: const [
                   DropdownMenuItem(value: 'client', child: Text('Client')),
                   DropdownMenuItem(value: 'livreur', child: Text('Livreur')),
                   DropdownMenuItem(value: 'responsable', child: Text('Responsable')),
@@ -115,14 +158,21 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                   });
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Color(0xFF00695C),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                ),
                 onPressed: _submitForm,
-                child: Text('Inscription'),
+                child: const Text('Inscription'),
               ),
               TextButton(
                 onPressed: widget.onToggleFormMode,
-                child: Text('Vous avez déjà un compte ? Connectez-vous'),
+                child: const Text(
+                  'Vous avez déjà un compte ? Connectez-vous',
+                  style: TextStyle(color: Color(0xFF00695C)),
+                ),
               ),
               if (errorMessage.isNotEmpty)
                 Padding(
@@ -134,8 +184,6 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                 ),
             ],
           ),
-        ),
-      ),
-    );
+        );
   }
 }

@@ -6,6 +6,9 @@ import 'dart:convert';
 import 'package:djikarice_delivery/utils.dart';
 
 class AuthProvider with ChangeNotifier {
+  AuthProvider() {
+    _loadToken();
+  }
   String? _token;
   bool _isAuthenticated = false;
   User? _user;
@@ -13,14 +16,14 @@ class AuthProvider with ChangeNotifier {
   String? get token => _token;
   bool get isAuthenticated => _isAuthenticated;
   User? get user => _user;
-  AuthProvider() {
-    _loadToken();
-  }
+  
 
   Future<void> _loadToken() async {
     _token = await DatabaseHelper().getToken();
+    print(_token);
     if (_token != null) {
       _isAuthenticated = true;
+      print(_isAuthenticated);
     }
     notifyListeners();
   }
@@ -47,8 +50,8 @@ class AuthProvider with ChangeNotifier {
         final jsonResponse = jsonDecode(response.body);
         print(jsonResponse);
         print(jsonResponse["user"]);
-
-
+        _user = User.fromJson(jsonResponse["user"]);
+        print(_user?.name);
         _isAuthenticated = true;
         notifyListeners();
       } else {

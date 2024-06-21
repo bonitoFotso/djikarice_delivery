@@ -1,7 +1,8 @@
+import 'package:djikarice_delivery/livraisons/delivery_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:djikarice_delivery/login/login_screen.dart';
 import 'package:djikarice_delivery/models/user.dart';
 import 'package:djikarice_delivery/provider/auth_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -65,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Bienvenue ${authProvider.user?.name ?? ''}',
+                    'Bienvenue ${authProvider.user?.name}',
                     style: const TextStyle(color: Colors.white),
                   ),
                 ],
@@ -76,6 +77,9 @@ class HomeScreen extends StatelessWidget {
               leading: const Icon(Icons.account_circle),
               onTap: () {
                 // Naviguer vers l'écran de profil
+                Navigator.pop(context); // Ferme le drawer
+                Navigator.pushNamed(
+                    context, '/profile'); // Navigue vers l'écran de profil
               },
             ),
             ListTile(
@@ -83,6 +87,12 @@ class HomeScreen extends StatelessWidget {
               leading: const Icon(Icons.shopping_cart),
               onTap: () {
                 // Naviguer vers l'écran des commandes
+                Navigator.pop(context); // Ferme le drawer
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            DeliveryPage())); // Navigue vers l'écran des commandes
               },
             ),
             ListTile(
@@ -90,6 +100,9 @@ class HomeScreen extends StatelessWidget {
               leading: const Icon(Icons.settings),
               onTap: () {
                 // Naviguer vers l'écran de paramètres
+                Navigator.pop(context); // Ferme le drawer
+                Navigator.pushNamed(
+                    context, '/settings'); // Navigue vers l'écran de paramètres
               },
             ),
           ],
@@ -133,6 +146,19 @@ class HomeScreen extends StatelessWidget {
         ],
         onTap: (index) {
           // Gérer la navigation en fonction de l'indice sélectionné
+          switch (index) {
+            case 0:
+              // Accueil (déjà sur l'écran d'accueil)
+              break;
+            case 1:
+              // Naviguer vers l'écran des commandes
+              Navigator.pushNamed(context, '/orders');
+              break;
+            case 2:
+              // Naviguer vers l'écran de profil
+              Navigator.pushNamed(context, '/profile');
+              break;
+          }
         },
       ),
     );

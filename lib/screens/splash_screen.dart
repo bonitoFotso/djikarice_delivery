@@ -1,8 +1,8 @@
 import 'package:djikarice_delivery/login/login_screen.dart';
 import 'package:djikarice_delivery/provider/auth_provider.dart';
+import 'package:djikarice_delivery/screens/hscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'home_screen.dart'; // Remplacez par votre fichier HomeScreen
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -21,6 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   _navigateToNext() async {
     await Future.delayed(const Duration(milliseconds: 4000), () {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      print(authProvider.isAuthenticated);
       if (authProvider.isAuthenticated) {
         // Si l'utilisateur est connecté, allez à l'écran de profil
         Navigator.pushReplacement(
@@ -46,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF00695C),
       body: Center(
-        child: Image.asset('assets/images/splash_logo.png'),
+        child: Image.asset('assets/images/splash_logo.jpeg'),
       ),
     );
   }

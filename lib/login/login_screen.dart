@@ -60,6 +60,7 @@ class _AuthWidgetState extends State<AuthWidget> {
     return Scaffold(
       appBar: AppBar(
         title: Text(isLogin ? 'Connexion' : 'Inscription'),
+        backgroundColor: const Color(0xFF00695C),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
