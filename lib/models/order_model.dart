@@ -1,9 +1,8 @@
-import 'package:djikarice_delivery/models/user.dart';
 
 class Delivery {
   final int id;
-  final User user; // Référence au client
-  final Livreur? livreur; // Référence au livreur
+  final int client; // Référence au client
+  final int? livreur; // Référence au livreur
   final String status;
   final String packageType;
   final String pickupAddress;
@@ -17,7 +16,7 @@ class Delivery {
 
   Delivery({
     required this.id,
-    required this.user,
+    required this.client,
     this.livreur,
     required this.status,
     required this.packageType,
@@ -35,8 +34,8 @@ class Delivery {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'user': user.toJson(),
-      'livreur': livreur?.toJson(), // Convertir livreur en JSON s'il existe
+      'client': client,
+      'livreur': livreur,
       'status': status,
       'packageType': packageType,
       'pickupAddress': pickupAddress,
@@ -54,8 +53,8 @@ class Delivery {
   factory Delivery.fromJson(Map<String, dynamic> json) {
     return Delivery(
       id: json['id'],
-      user: User.fromJson(json['user']),
-      livreur: json['livreur'] != null ? Livreur.fromJson(json['livreur']) : null,
+      client: json['client'],
+      livreur: json['livreur'],
       status: json['status'],
       packageType: json['packageType'],
       pickupAddress: json['pickupAddress'],

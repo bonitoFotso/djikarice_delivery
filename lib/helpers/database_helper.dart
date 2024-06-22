@@ -18,7 +18,7 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'auth.db');
+    String path = join(await getDatabasesPath(), 'a5uth.db');
     return await openDatabase(
       path,
       version: 1,
@@ -26,20 +26,30 @@ class DatabaseHelper {
     );
   }
 
+  Future<void> deleteDatabase(String path) async {
+    final path = join(await getDatabasesPath(), 'auth.db');
+    await deleteDatabase(path);
+    _database = null;
+  }
+
   Future _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE auth (
         id INTEGER PRIMARY KEY,
-        token TEXT
+        token TEXT,
+        refreshtoken TEXT
       )
     ''');
   }
 
-  Future<void> saveToken(String token) async {
+  Future<void> saveToken(String token, String refreshtoken) async {
     final db = await database;
     await db.insert(
       'auth',
-      {'token': token},
+      {
+        'token': token,
+        'refreshtoken': refreshtoken,
+      },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
@@ -49,6 +59,15 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> maps = await db.query('auth');
     if (maps.isNotEmpty) {
       return maps.first['token'];
+    }
+    return null;
+  }
+
+  Future<String?> getRefreshToken() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('auth');
+    if (maps.isNotEmpty) {
+      return maps.first['refreshtoken'];
     }
     return null;
   }

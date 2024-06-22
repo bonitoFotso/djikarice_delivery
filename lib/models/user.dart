@@ -8,6 +8,9 @@ class User {
   final bool isAdmin;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final bool isClient;
+  final bool isLivreur;
+  final bool isResponsable;
 
   User({
     required this.id,
@@ -17,6 +20,9 @@ class User {
     required this.isAdmin,
     required this.createdAt,
     required this.updatedAt,
+    this.isClient = false,
+    this.isLivreur = false,
+    this.isResponsable = false,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -24,10 +30,13 @@ class User {
       id: json['id'],
       email: json['email'],
       name: json['name'],
-      isActive: json['is_active'],
-      isAdmin: json['is_admin'],
+      isActive: json['active'],
+      isAdmin: json['admin'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
+      isClient: json['is_client'] ?? false,
+      isLivreur: json['is_livreur'] ?? false,
+      isResponsable: json['is_responsable'] ?? false,
     );
   }
 
@@ -36,58 +45,21 @@ class User {
       'id': id,
       'email': email,
       'name': name,
-      'is_active': isActive,
-      'is_admin': isAdmin,
+      'active': isActive,
+      'admin': isAdmin,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'is_client': isClient,
+      'is_livreur': isLivreur,
+      'is_responsable': isResponsable,
     };
   }
 }
 
-// Classe pour le profil utilisateur
-class UserProfile {
-  final User user;
-  final String? phoneNumber;
-  final String? address;
-  final String? preferredPaymentMethod;
-  final int loyaltyPoints;
-  final String role;
-
-  UserProfile({
-    required this.user,
-    this.phoneNumber,
-    this.address,
-    this.preferredPaymentMethod,
-    required this.loyaltyPoints,
-    required this.role,
-  });
-
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    return UserProfile(
-      user: User.fromJson(json['user']),
-      phoneNumber: json['phone_number'],
-      address: json['address'],
-      preferredPaymentMethod: json['preferred_payment_method'],
-      loyaltyPoints: json['loyalty_points'],
-      role: json['role'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'user': user.toJson(),
-      'phone_number': phoneNumber,
-      'address': address,
-      'preferred_payment_method': preferredPaymentMethod,
-      'loyalty_points': loyaltyPoints,
-      'role': role,
-    };
-  }
-}
 
 // Classe pour le responsable
 class Responsable {
-  final User user;
+  final int user;
   final String department;
   final String role;
   final String? phoneNumber;
@@ -111,7 +83,7 @@ class Responsable {
 
   factory Responsable.fromJson(Map<String, dynamic> json) {
     return Responsable(
-      user: User.fromJson(json['user']),
+      user: json['user'],
       department: json['department'],
       role: json['role'],
       phoneNumber: json['phone_number'],
@@ -127,7 +99,7 @@ class Responsable {
 
   Map<String, dynamic> toJson() {
     return {
-      'user': user.toJson(),
+      'user': user,
       'department': department,
       'role': role,
       'phone_number': phoneNumber,
@@ -142,7 +114,7 @@ class Responsable {
 
 // Classe pour le client
 class Client {
-  final User user;
+  final int user;
   final String? phoneNumber;
   final String? address;
   final String? preferredPaymentMethod;
@@ -158,7 +130,7 @@ class Client {
 
   factory Client.fromJson(Map<String, dynamic> json) {
     return Client(
-      user: User.fromJson(json['user']),
+      user: json['user'],
       phoneNumber: json['phone_number'],
       address: json['address'],
       preferredPaymentMethod: json['preferred_payment_method'],
@@ -168,7 +140,7 @@ class Client {
 
   Map<String, dynamic> toJson() {
     return {
-      'user': user.toJson(),
+      'user': user,
       'phone_number': phoneNumber,
       'address': address,
       'preferred_payment_method': preferredPaymentMethod,
@@ -179,7 +151,7 @@ class Client {
 
 // Classe pour le livreur
 class Livreur {
-  final User user;
+  final int user;
   final String? phoneNumber;
   final String? address;
   final String? vehicleType;
@@ -199,7 +171,7 @@ class Livreur {
 
   factory Livreur.fromJson(Map<String, dynamic> json) {
     return Livreur(
-      user: User.fromJson(json['user']),
+      user: json['user'],
       phoneNumber: json['phone_number'],
       address: json['address'],
       vehicleType: json['vehicle_type'],
@@ -211,7 +183,7 @@ class Livreur {
 
   Map<String, dynamic> toJson() {
     return {
-      'user': user.toJson(),
+      'user': user,
       'phone_number': phoneNumber,
       'address': address,
       'vehicle_type': vehicleType,

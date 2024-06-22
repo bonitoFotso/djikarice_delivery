@@ -1,4 +1,5 @@
 import 'package:djikarice_delivery/provider/auth_provider.dart';
+import 'package:djikarice_delivery/provider/delivery_provider.dart';
 import 'package:djikarice_delivery/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,6 +15,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => DeliveryProvider()),
       ],
       child: const MyApp(),
     ),

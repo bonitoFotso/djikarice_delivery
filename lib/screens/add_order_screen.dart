@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../helpers/database_helper.dart';
-import '../models/order_model.dart';
 
 class AddOrderScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
