@@ -35,6 +35,13 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // fonction pour recupere le refreshtoken
+  Future<void> _loadRefreshToken() async {
+    _refreshToken = await DatabaseHelper().getRefreshToken();
+    print(_refreshToken);
+    notifyListeners();
+  }
+
   Future<void> _saveToken(String token, String refreshToken) async {
     await DatabaseHelper().saveToken(token, refreshToken);
   }
@@ -45,6 +52,7 @@ class AuthProvider with ChangeNotifier {
 
   // Fonction pour rafraîchir le token
   Future<void> refreshToken() async {
+    _refreshToken = await DatabaseHelper().getRefreshToken();
     final url = Uri.parse('$apiUrl/api/user/token/refresh/');
     final response = await http.post(url, body: {
       'refresh': _refreshToken,
@@ -83,6 +91,7 @@ class AuthProvider with ChangeNotifier {
         if (_user!.isClient) {
           _client = Client.fromJson(jsonResponse["profile"]);
         } else if (_user!.isLivreur) {
+          print(jsonResponse["profile"]);
           _livreur = Livreur.fromJson(jsonResponse["profile"]);
         }
 
@@ -93,11 +102,12 @@ class AuthProvider with ChangeNotifier {
         throw Exception('Failed to load user information');
       }
     } catch (e) {
+      print(e);
       throw Exception('Error loading user information: $e');
     }
   }
 
-  Future<void> login(String email, String password) async {
+Future<void> login(String email, String password) async {
     final response = await http.post(
       Uri.parse('$apiUrl/api/user/login/'),
       headers: {
@@ -108,6 +118,7 @@ class AuthProvider with ChangeNotifier {
         'password': password,
       },
     );
+
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       _token = jsonResponse['token']['access'];

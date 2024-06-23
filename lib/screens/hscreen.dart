@@ -17,14 +17,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  late AuthProvider authProvider;
-  
+
   @override
   void initState() {
     super.initState();
-    authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.refreshToken();
-    authProvider.loadUserInformation();
   }
 
   void _onItemTapped(int index) {
@@ -35,105 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    authProvider = Provider.of<AuthProvider>(context);
-    bool isClient = authProvider.user?.isClient ?? false;
-    bool isLivreur = authProvider.user?.isLivreur ?? false;
-    bool isResponsable = authProvider.user?.isResponsable ?? false;
-
-    final List<Widget> clientPages = [
-      HomePage(),
-      HistoryPage(),
-      ProfilePage(),
-    ];
-
-    final List<Widget> livreurPages = [
-      HomePage(),
-      CreateDeliveryScreen(),
-      DeliveryPage(),
-      ProfilePage(),
-    ];
-
-    final List<Widget> responsablePages = [
-      HomePage(),
-      CreateDeliveryScreen(),
-      DeliveryPage(),
-      HistoryPage(),
-      ProfilePage(),
-    ];
-
-    final List<BottomNavigationBarItem> clientNavItems = [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        label: 'Accueil',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.favorite),
-        label: 'Favoris',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.person),
-        label: 'Profil',
-      ),
-    ];
-
-    final List<BottomNavigationBarItem> livreurNavItems = [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        label: 'Accueil',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.add),
-        label: 'Add Delivery',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.receipt_long),
-        label: 'Commandes',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.person),
-        label: 'Profil',
-      ),
-    ];
-
-    final List<BottomNavigationBarItem> responsableNavItems = [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        label: 'Accueil',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.add),
-        label: 'Add Delivery',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.receipt_long),
-        label: 'Commandes',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.favorite),
-        label: 'Favoris',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.person),
-        label: 'Profil',
-      ),
-    ];
-
-    List<Widget> pages;
-    List<BottomNavigationBarItem> navItems;
-
-    if (isResponsable) {
-      pages = responsablePages;
-      navItems = responsableNavItems;
-    } else if (isLivreur) {
-      pages = livreurPages;
-      navItems = livreurNavItems;
-    } else if (isClient) {
-      pages = clientPages;
-      navItems = clientNavItems;
-    } else {
-      pages = [];
-      navItems = [];
-    }
+  late AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -148,26 +46,137 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: pages,
-      ),
       drawer: CustomDrawer(
-        onItemTapped: _onItemTapped,
-        onLogout: () {
-          authProvider.logout();
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => AuthWidget()),
-          );
+                onItemTapped: _onItemTapped,
+                onLogout: () {
+                  authProvider.logout();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => AuthWidget()),
+                  );
+                },
+              ),
+      body: FutureBuilder(
+        future: authProvider.loadUserInformation(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Erreur: ${snapshot.error}'));
+          } else if (!authProvider.isAuthenticated || authProvider.user == null) {
+            return Center(child: Text('Utilisateur non trouvé ou non authentifié'));
+          } else {
+            //bool isClient = authProvider.user?.isClient ?? false;
+            bool isLivreur = authProvider.user?.isLivreur ?? false;
+            bool isResponsable = authProvider.user?.isResponsable ?? false;
+
+            final List<Widget> clientPages = [
+              CreateDeliveryScreen(),
+              HistoryPage(),
+              ProfilePage(),
+            ];
+
+            final List<Widget> livreurPages = [
+              CreateDeliveryScreen(),
+              CreateDeliveryScreen(),
+              DeliveryPage(),
+              ProfilePage(),
+            ];
+
+            final List<Widget> responsablePages = [
+              HomePage(),
+              CreateDeliveryScreen(),
+              DeliveryPage(),
+              HistoryPage(),
+              ProfilePage(),
+            ];
+
+            final List<BottomNavigationBarItem> clientNavItems = [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Accueil',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite),
+                label: 'Favoris',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profil',
+              ),
+            ];
+
+            final List<BottomNavigationBarItem> livreurNavItems = [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Accueil',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.add),
+                label: 'Add Delivery',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.receipt_long),
+                label: 'Commandes',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profil',
+              ),
+            ];
+
+            final List<BottomNavigationBarItem> responsableNavItems = [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Accueil',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.add),
+                label: 'Add Delivery',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.receipt_long),
+                label: 'Commandes',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite),
+                label: 'Favoris',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profil',
+              ),
+            ];
+
+            List<Widget> pages;
+            List<BottomNavigationBarItem> navItems;
+
+            if (isResponsable) {
+              pages = responsablePages;
+              navItems = responsableNavItems;
+            } else if (isLivreur) {
+              pages = livreurPages;
+              navItems = livreurNavItems;
+            } else {
+              pages = clientPages;
+              navItems = clientNavItems;
+            }
+
+            return Scaffold(
+              body: IndexedStack(
+                index: _currentIndex,
+                children: pages,
+              ),
+              
+              bottomNavigationBar: BottomNavigationBar(
+                backgroundColor: const Color(0xFF00695C),
+                selectedItemColor: Colors.amber[800],
+                items: navItems,
+                currentIndex: _currentIndex,
+                onTap: _onItemTapped,
+              ),
+            );
+          }
         },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF00695C),
-        unselectedItemColor: Color.fromARGB(255, 193, 235, 230),
-        selectedItemColor: Colors.amber[800],
-        items: navItems,
-        currentIndex: _currentIndex,
-        onTap: _onItemTapped,
       ),
     );
   }

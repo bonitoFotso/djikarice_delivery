@@ -1,33 +1,34 @@
+import 'dart:convert';
 
 class Delivery {
-  final int id;
-  final int client; // Référence au client
+  final int? id;
+  final int? client; // Référence au client
   final int? livreur; // Référence au livreur
-  final String status;
-  final String packageType;
-  final String pickupAddress;
-  final String deliveryAddress;
-  final DateTime scheduledTime;
-  final DateTime? actualDeliveryTime; // Date/heure réelle de la livraison (optionnel)
+  final String? status;
+  final String? package_type;
+  final String? pickup_address;
+  final String? delivery_address;
+  final DateTime? scheduled_time;
+  final DateTime? actual_delivery_time; // Date/heure réelle de la livraison (optionnel)
   final String? notes; // Notes (optionnel)
-  final Map<String, dynamic>? packageDetails; // Détails du paquet en JSON (optionnel)
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String? package_details; // Détails du paquet en JSON (optionnel)
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   Delivery({
-    required this.id,
-    required this.client,
+    this.id,
+    this.client,
     this.livreur,
-    required this.status,
-    required this.packageType,
-    required this.pickupAddress,
-    required this.deliveryAddress,
-    required this.scheduledTime,
-    this.actualDeliveryTime,
+    this.status,
+    this.package_type,
+    this.pickup_address,
+    this.delivery_address,
+    this.scheduled_time,
+    this.actual_delivery_time,
     this.notes,
-    this.packageDetails,
-    required this.createdAt,
-    required this.updatedAt,
+    this.package_details,
+    this.createdAt,
+    this.updatedAt,
   });
 
   // Méthode pour convertir un Delivery en JSON
@@ -37,15 +38,15 @@ class Delivery {
       'client': client,
       'livreur': livreur,
       'status': status,
-      'packageType': packageType,
-      'pickupAddress': pickupAddress,
-      'deliveryAddress': deliveryAddress,
-      'scheduledTime': scheduledTime.toIso8601String(),
-      'actualDeliveryTime': actualDeliveryTime?.toIso8601String(),
+      'package_type': package_type,
+      'pickup_address': pickup_address,
+      'delivery_address': delivery_address,
+      'scheduled_time': scheduled_time?.toIso8601String(),
+      'actual_delivery_time': actual_delivery_time?.toIso8601String(),
       'notes': notes,
-      'packageDetails': packageDetails,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'package_details': package_details,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
     };
   }
 
@@ -56,15 +57,15 @@ class Delivery {
       client: json['client'],
       livreur: json['livreur'],
       status: json['status'],
-      packageType: json['packageType'],
-      pickupAddress: json['pickupAddress'],
-      deliveryAddress: json['deliveryAddress'],
-      scheduledTime: DateTime.parse(json['scheduledTime']),
-      actualDeliveryTime: json['actualDeliveryTime'] != null ? DateTime.parse(json['actualDeliveryTime']) : null,
+      package_type: json['package_type'],
+      pickup_address: json['pickup_address'],
+      delivery_address: json['delivery_address'],
+      scheduled_time: DateTime.parse(json['scheduled_time']),
+      actual_delivery_time: json['actual_delivery_time'] != null ? DateTime.parse(json['actual_delivery_time']) : null,
       notes: json['notes'],
-      packageDetails: json['packageDetails'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      package_details: json['package_details'] != null ? jsonEncode(json['package_details']) : null,
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
     );
   }
 }

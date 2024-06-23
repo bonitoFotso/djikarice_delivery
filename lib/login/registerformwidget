@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:djikarice_delivery/provider/auth_provider.dart';
-import 'package:djikarice_delivery/screens/home_screen.dart';
+import 'package:djikarice_delivery/screens/hscreen.dart';
 
 class RegisterFormWidget extends StatefulWidget {
   final Function() onToggleFormMode;

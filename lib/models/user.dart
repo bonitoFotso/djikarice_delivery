@@ -59,6 +59,7 @@ class User {
 
 // Classe pour le responsable
 class Responsable {
+  final int id;
   final int user;
   final String department;
   final String role;
@@ -70,6 +71,7 @@ class Responsable {
   final Map<String, dynamic>? performanceMetrics;
 
   Responsable({
+    required this.id,
     required this.user,
     required this.department,
     required this.role,
@@ -83,6 +85,7 @@ class Responsable {
 
   factory Responsable.fromJson(Map<String, dynamic> json) {
     return Responsable(
+      id: json['id'],
       user: json['user'],
       department: json['department'],
       role: json['role'],
@@ -99,6 +102,7 @@ class Responsable {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'user': user,
       'department': department,
       'role': role,
@@ -114,6 +118,7 @@ class Responsable {
 
 // Classe pour le client
 class Client {
+  final int id;
   final int user;
   final String? phoneNumber;
   final String? address;
@@ -121,6 +126,7 @@ class Client {
   final int loyaltyPoints;
 
   Client({
+    required this.id,
     required this.user,
     this.phoneNumber,
     this.address,
@@ -130,6 +136,7 @@ class Client {
 
   factory Client.fromJson(Map<String, dynamic> json) {
     return Client(
+      id: json['id'],
       user: json['user'],
       phoneNumber: json['phone_number'],
       address: json['address'],
@@ -140,6 +147,7 @@ class Client {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'user': user,
       'phone_number': phoneNumber,
       'address': address,
@@ -151,6 +159,7 @@ class Client {
 
 // Classe pour le livreur
 class Livreur {
+  final int id;
   final int user;
   final String? phoneNumber;
   final String? address;
@@ -160,6 +169,7 @@ class Livreur {
   final String? currentLocation;
 
   Livreur({
+    required this.id,
     required this.user,
     this.phoneNumber,
     this.address,
@@ -171,6 +181,7 @@ class Livreur {
 
   factory Livreur.fromJson(Map<String, dynamic> json) {
     return Livreur(
+      id: json['id'],
       user: json['user'],
       phoneNumber: json['phone_number'],
       address: json['address'],
@@ -183,6 +194,7 @@ class Livreur {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'user': user,
       'phone_number': phoneNumber,
       'address': address,
